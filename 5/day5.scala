@@ -58,7 +58,7 @@ import vecxt.all.*
   for ((a, b) <- failed) yield {
     println(a)
     println(b)
-    ruleFix()
+    // ruleFix()
   }
 
   // val validCount =
