@@ -57,6 +57,11 @@ enum Orientation(val nextRow: Row, val nextCol: Col):
   case Right extends Orientation(0, 1)
   case Down extends Orientation(1, 0)
   case Left extends Orientation(0, -1)
+  def turn = this match
+    case Up    => Right
+    case Right => Down
+    case Down  => Left
+    case Left  => Up
 
 extension (rc: RowCol)
   def move(orient: Orientation): RowCol =
@@ -88,13 +93,7 @@ extension (grid: Matrix[Char])
     if (grid.inBounds(nextSquare)) {
       grid(nextSquare) match
         case '#' =>
-          val newOrient = orient match
-            case Orientation.Up    => Orientation.Right
-            case Orientation.Right => Orientation.Down
-            case Orientation.Down  => Orientation.Left
-            case Orientation.Left  => Orientation.Up
-          // println(s"nextSquare: ${grid(nextSquare)}")
-          Some((rc, (newOrient, rc)))
+          Some((rc, (orient.turn, rc)))
 
         case _ =>
           diagnosticGrid.update(rc, 'X')
@@ -108,8 +107,10 @@ extension (grid: Matrix[Char])
   val path = iterate.takeWhile(grid.inBounds).toSet
   // println(diagnosticGrid.printMat)
 
-  println("Part 2")
+  println("part 1")
   println(path.size + 1) // we're missing the last update
+
+  println("Part 2")
 
   val out =
     for (rowI <- 0 until grid.rows) yield for (colJ <- 0 until grid.cols) yield
@@ -141,9 +142,9 @@ extension (grid: Matrix[Char])
             ) // this wasn't on the original happy, path, so we can't add a new cycle asit'll never be hit.
           else
             val newGrid = Matrix(grid.raw.clone(), grid.shape)
-            val diagnosticGrid = Matrix(grid.raw.clone(), grid.shape)
+            // val diagnosticGrid = Matrix(grid.raw.clone(), grid.shape)
             newGrid.update(checkBlockAt, '#')
-            diagnosticGrid.update(checkBlockAt, '#')
+            // diagnosticGrid.update(checkBlockAt, '#')
 
             val newGraph = Graph()
             val iterate =
@@ -163,11 +164,6 @@ extension (grid: Matrix[Char])
                   if (newGrid.inBounds(nextSquare) && !newGraph.isCyclic) {
                     newGrid(nextSquare) match
                       case '#' =>
-                        val newOrient = orient match
-                          case Orientation.Up    => Orientation.Right
-                          case Orientation.Right => Orientation.Down
-                          case Orientation.Down  => Orientation.Left
-                          case Orientation.Left  => Orientation.Up
                         // println(s"nextSquare: ${grid(nextSquare)}")
                         // if (currentPosition != previousTurnAt)
                         // println(newGraph.adjacencyList)
@@ -189,7 +185,7 @@ extension (grid: Matrix[Char])
                               newGraph.isCyclic
                             ),
                             (
-                              newOrient,
+                              orient.turn,
                               currentPosition,
                               (currentPosition._1, currentPosition._2)
                             )
