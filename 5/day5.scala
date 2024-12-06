@@ -2,7 +2,7 @@ import vecxt.all.*
 
 @main def day5 =
   val (rules, dataWithBLank) =
-    readInputForDay(5).toList.partition(_.contains("|"))
+    readTestInputForDay(5).toList.partition(_.contains("|"))
   val data = dataWithBLank.tail
 
   // println(rules)
@@ -22,25 +22,58 @@ import vecxt.all.*
     val foundFirst = in.indexOf(a.toString())
     val foundSecond = in.indexOf(b.toString())
 
-    val newString =
-      if foundFirst > foundSecond then
-        in.substring(0, foundFirst) + in.substring(foundSecond, 3) + in
-          .substring(foundFirst, foundFirst + 3)
-          + in.substring(foundSecond + 3, in.length())
-      else in.reverse
+    println("foundFirst: " + foundFirst)
+    println(s"foundSecond : $foundSecond")
 
-    if (ruleCheck(a, b)(newString)) newString
-    else throw new Exception(s"Rule fix failed for $a, $b, $in")
+    println(s"a: $a")
+    println(s"b: $b")
+
+    println(s"fixing $in")
+    val trimmed = in.trim()
+    println(s"trimmed: ${trimmed.length()}")
+
+    val newString =
+      if foundFirst > foundSecond then {
+        trimmed
+          .substring(0, foundSecond)
+          .concat(
+            trimmed
+              .substring(
+                foundFirst,
+                Math.min(foundFirst + 3, in.length())
+              )
+          )
+          .+(
+            trimmed.substring(
+              foundSecond,
+              foundSecond + 3
+            )
+          )
+          .+(
+            if ((foundFirst + 3) <= trimmed.length() - 1) then
+              trimmed.substring(foundFirst + 3, trimmed.length())
+            else ""
+          )
+      } else trimmed
+
+    println(s"fixed $in to $newString")
+    newString
 
   }
 
-  val rulesInts =
-    rules.map(_.split("\\|").map(_.trim.toInt) match {
-      case Array(a, b) => ruleCheck(a, b)
-    })
+  val rulesInts = rules.map(_.split("\\|").map(_.trim.toInt))
+
+  val fixRules = rulesInts collect { case Array(a, b) =>
+    ruleFix(a, b)
+  }
+
+  val theRules =
+    rulesInts.collect { case Array(a, b) =>
+      ruleCheck(a, b)
+    }
 
   val rulesCheck = data.map { a =>
-    rulesInts.forall(r => r(a))
+    theRules.forall(r => r(a))
   }
 
   val checkedRules = rulesCheck.zip(data)
@@ -55,13 +88,39 @@ import vecxt.all.*
   println(middle)
   println(middle.sum)
 
-  for ((a, b) <- failed) yield {
-    println(a)
-    println(b)
-    // ruleFix()
-  }
+  // val rulesWithFix = theRules.zip(fixRules)
 
-  // val validCount =
-  //   parsedData.map(pages => rulesInts.map(rule => rule(pages))).trues
+  // def fixy(a: String, rule: String => Boolean, fix: String => String): String =
+  //   if rule(a) then a
+  //   else fix(a)
 
-  // println(validCount)
+  // val answer = for ((_, failedCase) <- failed) yield {
+  //   val newString = rulesWithFix.foldLeft(failedCase) {
+  //     case (acc, (rule, fix)) =>
+  //       println(acc)
+  //       val out = if (!rule(acc)) then
+  //         println("fix")
+  //         var tmp: String = acc
+  //         var stop = false
+  //         while (stop) {
+  //           tmp = fixy(acc, rule, fix)
+  //           if rule(tmp) then stop = true
+  //         }
+  //         println(tmp)
+  //         tmp
+  //       else acc
+  //       println(out)
+  //       out
+  //   }
+  //   println(newString)
+  //   val arg = newString.split(",")
+  //   arg((arg.length + 1) / 2 - 1).toInt
+  //   // ruleFix()
+  // }
+
+  // println(answer)
+
+  // // val validCount =
+  // //   parsedData.map(pages => rulesInts.map(rule => rule(pages))).trues
+
+  // // println(validCount)
