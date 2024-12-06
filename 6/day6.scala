@@ -7,7 +7,7 @@ import scala.util.boundary, boundary.break
 class Graph {
   // Adjacency list to store the graph
   val adjacencyList =
-    mutable.Map[Tuple2[Int, Int], List[Tuple2[Int, Int]]]()
+    mutable.Map.empty[Tuple2[Int, Int], List[Tuple2[Int, Int]]]
 
   // Add a node to the graph
   def addNode(node: (Int, Int)): Unit = {
@@ -138,7 +138,7 @@ extension (grid: Matrix[Char])
               rowI,
               colJ,
               false
-            ) // this is a path block, so can't add a new cycle.
+            ) // this wasn't on the original happy, path, so we can't add a new cycle asit'll never be hit.
           else
             // this is a new block, so we can add a new cycle.
             val newGrid = Matrix(grid.raw.clone(), grid.shape)
