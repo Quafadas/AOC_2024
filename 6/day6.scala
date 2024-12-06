@@ -74,11 +74,9 @@ extension (grid: Matrix[Char])
   def inBounds(rc: RowCol): Boolean = inBounds(rc._1, rc._2)
 
 @main def day6 =
-  val grid =
-    Matrix.fromRows(readInputForDay(6).map(_.toCharArray).toArray)
+  val grid = Matrix.fromRows(readInputForDay(6).map(_.toCharArray).toArray)
 
-  val diagnosticGrid =
-    Matrix.fromRows(readInputForDay(6).map(_.toCharArray).toArray)
+  val diagnosticGrid = Matrix.fromRows(readInputForDay(6).map(_.toCharArray).toArray)
 
   val guardPos = grid.raw.indexOf('^')
   val startPos = (guardPos % grid.cols: Row, guardPos / grid.cols: Col)
@@ -134,7 +132,7 @@ extension (grid: Matrix[Char])
           ) // don't think this is valid.
         case _ =>
           if (!path.contains(checkBlockAt))
-            println("skipped")
+            // println("skipped")
             (
               rowI,
               colJ,
@@ -193,7 +191,7 @@ extension (grid: Matrix[Char])
                         )
 
                       case _ =>
-                        diagnosticGrid.update(currentPosition, 'X')
+                        // diagnosticGrid.update(currentPosition, 'X')
 
                         Some(
                           (
@@ -202,7 +200,7 @@ extension (grid: Matrix[Char])
                           )
                         )
                   } else
-                    diagnosticGrid.update(currentPosition, 'E')
+                    // diagnosticGrid.update(currentPosition, 'E')
                     // println(diagnosticGrid.printMat)
                     None // finished
                 }
