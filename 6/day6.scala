@@ -140,7 +140,6 @@ extension (grid: Matrix[Char])
               false
             ) // this wasn't on the original happy, path, so we can't add a new cycle asit'll never be hit.
           else
-            // this is a new block, so we can add a new cycle.
             val newGrid = Matrix(grid.raw.clone(), grid.shape)
             val diagnosticGrid = Matrix(grid.raw.clone(), grid.shape)
             newGrid.update(checkBlockAt, '#')
