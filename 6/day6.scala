@@ -177,16 +177,8 @@ extension (grid: Matrix[Char])
                         //   println(diagnosticGrid.printMat)
                         Some(
                           (
-                            (
-                              currentPosition._1,
-                              currentPosition._2,
-                              newGraph.isCyclic
-                            ),
-                            (
-                              orient.turn,
-                              currentPosition,
-                              (currentPosition._1, currentPosition._2)
-                            )
+                            (currentPosition._1, currentPosition._2, newGraph.isCyclic),
+                            (orient.turn, currentPosition, (currentPosition._1, currentPosition._2))
                           )
                         )
 
@@ -194,10 +186,7 @@ extension (grid: Matrix[Char])
                         // diagnosticGrid.update(currentPosition, 'X')
 
                         Some(
-                          (
-                            (nextSquare._1, nextSquare._2, false),
-                            (orient, nextSquare, previousTurnAt)
-                          )
+                          ((nextSquare._1, nextSquare._2, false), (orient, nextSquare, previousTurnAt))
                         )
                   } else
                     // diagnosticGrid.update(currentPosition, 'E')
