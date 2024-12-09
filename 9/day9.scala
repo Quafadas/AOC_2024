@@ -18,7 +18,8 @@ enum DiskBlock:
       case PartialFile(parent) => 1L
 
 @main def day9 =
-  val input = readTestInputForDay(9).mkString
+  val input = readInputForDay(9).mkString
+
   val (makeBlocky, _, _) = input.foldLeft[(List[DiskBlock], DiskBlock, Long)](List.empty[DiskBlock], DiskBlock.Space(0L), 0L) { case ((acc, prior, priorId), char) =>
     val (newBLock, newId) = prior match
       case DiskBlock.Space(_) =>
@@ -35,8 +36,8 @@ enum DiskBlock:
   }
 
   def reorder(headIdx: Int, tailIdx: Int, diskBlocks: List[DiskBlock], checksum: Long, direction: Direction): (Long, List[DiskBlock]) =
-    pprintln(s"headIdx: $headIdx, tailIdx: $tailIdx, checksum: $checksum, direction: $direction")
-    pprintln(diskBlocks)
+    // pprintln(s"headIdx: $headIdx, tailIdx: $tailIdx, checksum: $checksum, direction: $direction")
+    // pprintln(diskBlocks)
     if (diskBlocks.isEmpty)
       (checksum, diskBlocks)
     else {
