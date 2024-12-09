@@ -85,7 +85,7 @@ enum DiskBlock:
 
     }
 
-  pprintln(makeBlocky)
+  // pprintln(makeBlocky)
 
   val part1 = reorder(0, 1, makeBlocky, 0L, Direction.Head)
 
