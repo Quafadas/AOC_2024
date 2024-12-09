@@ -59,8 +59,8 @@ enum DiskBlock:
                 case DiskBlock.FakeFile(id, length) => reorder(headIdx, tailIdx, diskBlocks, checksum, Direction.Tail)
                 case DiskBlock.Space(length)        => reorder(headIdx, tailIdx, diskBlocks, checksum, Direction.Tail)
                 case DiskBlock.PartialSpace         => reorder(headIdx, tailIdx, diskBlocks, checksum, Direction.Tail)
-                case DiskBlock.PartialFile(parent) =>
-                  ???
+                case DiskBlock.PartialFile(parent) =>                  
+                  reorder(headIdx, tailIdx, diskBlocks.last +: diskBlocks.tail.dropRight(1), checksum, Direction.Head)
 
             case DiskBlock.PartialFile(parent) =>
               val newHeadIdx = headIdx + 1
