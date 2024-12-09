@@ -23,7 +23,7 @@ enum DiskBlock:
     val (newBLock, newId) = prior match
       case DiskBlock.Space(_) =>
         // println(char)
-        (DiskBlock.FakeFile(1L + priorId, char.asDigit.toLong), 1L + priorId)
+        (DiskBlock.FakeFile(priorId, char.asDigit.toLong), 1L + priorId)
       case DiskBlock.FakeFile(_, _) =>
         (DiskBlock.Space(char.asDigit.toLong), priorId)
       case _ => ???
@@ -59,18 +59,18 @@ enum DiskBlock:
                 case DiskBlock.FakeFile(id, length) => reorder(headIdx, tailIdx, diskBlocks, checksum, Direction.Tail)
                 case DiskBlock.Space(length)        => reorder(headIdx, tailIdx, diskBlocks, checksum, Direction.Tail)
                 case DiskBlock.PartialSpace         => reorder(headIdx, tailIdx, diskBlocks, checksum, Direction.Tail)
-                case DiskBlock.PartialFile(parent) =>                  
+                case DiskBlock.PartialFile(parent) =>
                   reorder(headIdx, tailIdx, diskBlocks.last +: diskBlocks.tail.dropRight(1), checksum, Direction.Head)
 
             case DiskBlock.PartialFile(parent) =>
               val newHeadIdx = headIdx + 1
               val newChecksum = checksum + parent.id * headIdx
-              reorder(newHeadIdx, tailIdx, diskBlocks, newChecksum, Direction.Head)
+              reorder(newHeadIdx, tailIdx, diskBlocks.tail, newChecksum, Direction.Head)
 
         case Direction.Tail =>
           diskBlocks.last match {
             case d: DiskBlock.FakeFile =>
-              val expanded = diskBlocks.take(diskBlocks.length - 1) ++ List.fill(d.length.toInt)(DiskBlock.PartialFile(d))
+              val expanded = diskBlocks.dropRight(1) ++ List.fill(d.length.toInt)(DiskBlock.PartialFile(d))
               reorder(headIdx, tailIdx, expanded, checksum, Direction.Head)
             case DiskBlock.Space(length) =>
               val dropTailSpace = diskBlocks.take(diskBlocks.length - 1)
@@ -86,6 +86,6 @@ enum DiskBlock:
 
   pprintln(makeBlocky)
 
-  val part1 = reorder(1, 1, makeBlocky, 0L, Direction.Head)
+  val part1 = reorder(0, 1, makeBlocky, 0L, Direction.Head)
 
   pprintln(part1)
