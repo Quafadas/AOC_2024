@@ -9,7 +9,7 @@ import scala.collection.mutable
 import scala.collection.mutable.HashMap
 
 extension (rc: RowCol)
-  def move(delta: RowCol): RowCol =
+  def moveDelta(delta: RowCol): RowCol =
     (rc._1 + delta._1, rc._2 + delta._2)
 
 @main def day8 =
@@ -19,15 +19,15 @@ extension (rc: RowCol)
     def project(a: RowCol, b: RowCol, grid: Matrix[Char]): List[RowCol] =
       this match
         case Single =>
-          val proj1 = a.move((a._1 - b._1, a._2 - b._2))
-          val proj2 = b.move((-a._1 + b._1, -a._2 + b._2))
+          val proj1 = a.moveDelta((a._1 - b._1, a._2 - b._2))
+          val proj2 = b.moveDelta((-a._1 + b._1, -a._2 + b._2))
           List(proj1, proj2).filter(grid.inBounds)
         case Coninuous =>
           val proj1 = (a._1 - b._1, a._2 - b._2)
           val proj2 = (-a._1 + b._1, -a._2 + b._2)
           val direction1 = Iterator
             .unfold[RowCol, RowCol](a) { rc =>
-              val newRC = rc.move(proj1)
+              val newRC = rc.moveDelta(proj1)
               if grid.inBounds(newRC) then Some(newRC, newRC)
               else None
             }
@@ -36,7 +36,7 @@ extension (rc: RowCol)
 
           val direction2 = Iterator
             .unfold[RowCol, RowCol](b) { rc =>
-              val newRC = rc.move(proj2)
+              val newRC = rc.moveDelta(proj2)
               if grid.inBounds(newRC) then Some(newRC, newRC)
               else None
             }

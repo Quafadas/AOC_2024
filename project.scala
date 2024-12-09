@@ -1,4 +1,4 @@
-//> using scala 3.5.2
+//> using scala 3.6.2-RC2
 
 //> using javaOpt --add-modules=jdk.incubator.vector
 
